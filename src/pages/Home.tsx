@@ -6,6 +6,7 @@ import { categories } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import AuraVisualizer from '../components/AuraVisualizer';
 import FoundrySection from '../components/FoundrySection';
+import GlobalNodeMap from '../components/GlobalNodeMap';
 
 export default function Home() {
   const { products } = useShop();
@@ -280,6 +281,9 @@ export default function Home() {
 
       {/* Foundry Assembly Experience */}
       <FoundrySection />
+
+      {/* Global Node Network */}
+      <GlobalNodeMap />
 
       {/* CTA / Newsletter */}
       <section className="py-60 relative overflow-hidden">
