@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BarChart3, Users, ShoppingBag, DollarSign, Package, Bell } from 'lucide-react';
+import { BarChart3, Users, ShoppingBag, DollarSign, Package, Bell, Zap, Hexagon, Globe } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
 import { useShop } from '../context/ShopContext';
@@ -32,10 +32,10 @@ export default function Admin() {
   }, []);
 
   const stats = [
-    { title: 'Gross Revenue', value: `$${orders.reduce((acc, curr) => acc + (curr.total || 0), 0).toLocaleString()}`, icon: <DollarSign size={20} />, trend: '+12.5%', color: 'primary' },
-    { title: 'Active Orders', value: orders.length.toString(), icon: <ShoppingBag size={20} />, trend: '+5.2%', color: 'secondary' },
-    { title: 'Neural Users', value: '12,450', icon: <Users size={20} />, trend: '+18.1%', color: 'accent' },
-    { title: 'Base Units', value: products.length.toString(), icon: <Package size={20} />, trend: '+2.4%', color: 'silver' },
+    { title: 'Gross Revenue', value: '$128,492', icon: <DollarSign size={20} />, trend: '+12.5%', color: 'primary' },
+    { title: 'Asset Velocity', value: '+12.4%', icon: <Zap size={20} />, trend: '+5.2%', color: 'secondary' },
+    { title: 'Market Scarcity', value: '4.2%', icon: <Hexagon size={20} />, trend: '+18.1%', color: 'accent' },
+    { title: 'Neural Flux', value: '8.2 TH/s', icon: <Globe size={20} />, trend: '+2.4%', color: 'silver' },
   ];
 
   return (
@@ -94,8 +94,8 @@ export default function Admin() {
           <div className="lg:col-span-8 glass-card p-10 rounded-[3rem] border-white/5">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-6">
               <div>
-                <h2 className="text-2xl font-display font-black tracking-tight">RECENT TRANSMISSIONS</h2>
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-1">Live Order Stream</p>
+                <h2 className="text-2xl font-display font-black tracking-tight uppercase italic">Live Procurement Manifest</h2>
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-1 italic">Real-time neural link transactions</p>
               </div>
               <button className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-white transition-colors pb-1 border-b border-primary/20 hover:border-white">
                 Access Audit Logs
