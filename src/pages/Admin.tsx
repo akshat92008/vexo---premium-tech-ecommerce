@@ -10,6 +10,11 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!db) {
+      setLoading(false);
+      return;
+    }
+
     const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(10));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const orderList = snapshot.docs.map(doc => ({
@@ -17,6 +22,9 @@ export default function Admin() {
         ...doc.data()
       }));
       setOrders(orderList);
+      setLoading(false);
+    }, (error) => {
+      console.error("Neural link sync error:", error);
       setLoading(false);
     });
 

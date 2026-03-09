@@ -121,6 +121,13 @@ export function ShopProvider({ children }: { children: ReactNode }) {
 
   const placeOrder = async (orderData: any) => {
     try {
+      if (!db) {
+        console.warn("Firestore not initialized. Order placed in simulation mode.");
+        const mockId = `VEXO-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+        clearCart();
+        return mockId;
+      }
+
       const docRef = await addDoc(collection(db, 'orders'), {
         ...orderData,
         items: cart,
