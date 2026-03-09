@@ -45,12 +45,12 @@ export default function Home() {
           </video>
         </div>
 
-        <div className="container mx-auto px-6 max-w-7xl relative z-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-20">
+        <div className="container mx-auto px-6 max-w-7xl relative z-20 flex flex-col items-center text-center pt-20">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-10"
+            className="space-y-10 flex flex-col items-center"
           >
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full glass border-white/5 group cursor-default">
               <span className="w-1.5 h-1.5 rounded-full bg-primary neon-glow animate-pulse" />
@@ -62,12 +62,12 @@ export default function Home() {
                 PURE. <br />
                 <span className="text-gradient-primary">AUDIO.</span>
               </h1>
-              <p className="text-lg md:text-xl text-text-muted max-w-md leading-relaxed font-medium">
+              <p className="text-lg md:text-xl text-text-muted max-w-2xl mx-auto leading-relaxed font-medium">
                 The intersection of futuristic aesthetics and acoustic science. Aura Sonic Pro — redefine your reality with zero-latency precision.
               </p>
             </div>
             
-            <div className="flex flex-wrap items-center gap-6 pt-4">
+            <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
               <Link 
                 to="/shop" 
                 className="group relative bg-white text-black px-12 py-5 rounded-2xl font-black transition-all hover:bg-primary hover:text-black hover:shadow-[0_0_30px_rgba(0,240,255,0.4)] flex items-center gap-4 active:scale-95"
@@ -83,7 +83,7 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="flex items-center gap-12 pt-10 border-t border-white/5">
+            <div className="flex items-center justify-center gap-12 pt-10 border-t border-white/5 w-full">
               {[
                 { label: 'Battery', val: '40H' },
                 { label: 'Latency', val: '0.1s' },
@@ -94,37 +94,6 @@ export default function Home() {
                   <div className="text-[9px] uppercase tracking-[0.3em] text-silver/40 font-bold">{stat.label}</div>
                 </div>
               ))}
-            </div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-            className="hidden lg:block relative"
-          >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full aspect-square bg-primary/10 blur-[180px] rounded-full animate-pulse" />
-            <div className="relative z-10 glass rounded-[4rem] p-2 border-white/5 shadow-2xl group overflow-hidden">
-               <div className="aspect-square relative overflow-hidden rounded-[3.5rem]">
-                 <img 
-                   src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=1200" 
-                   alt="Vexo Product" 
-                   className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-105 transition-all duration-[2s]"
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                 <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
-                   <div className="space-y-2">
-                     <h3 className="text-3xl font-display font-black text-white tracking-widest uppercase italic">AURA PRO X1</h3>
-                     <div className="flex items-center gap-2">
-                        <span className="w-2 h-px bg-primary" />
-                        <span className="text-[10px] font-bold text-silver/60 tracking-widest uppercase">Carbon Series / 2026 Edition</span>
-                     </div>
-                   </div>
-                   <Link to="/product/h1" className="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center hover:bg-primary transition-all shadow-glow active:scale-90">
-                      <ChevronRight size={28} />
-                   </Link>
-                 </div>
-               </div>
             </div>
           </motion.div>
         </div>
