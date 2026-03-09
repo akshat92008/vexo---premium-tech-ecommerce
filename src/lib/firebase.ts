@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getAnalytics, isSupported } from 'firebase/analytics';
@@ -13,11 +13,19 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+// Initialize Firebase only if config is present
+const isConfigValid = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'undefined';
+
+const app = isConfigValid 
+  ? (getApps().length > 0 ? getApp() : initializeApp(firebaseConfig)) 
+  : null;
+
+export const auth = app ? getAuth(app) : null;
+export const db = app ? getFirestore(app) : null;
 
 // Analytics initialization with support check
-export const analytics = typeof window !== 'undefined' ? isSupported().then(yes => yes ? getAnalytics(app) : null) : null;
+export const analytics = typeof window !== 'undefined' && app 
+  ? isSupported().then(yes => yes ? getAnalytics(app) : null) 
+  : Promise.resolve(null);
 
 export default app;

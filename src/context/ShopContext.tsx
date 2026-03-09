@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Product } from '../data/products';
+import { Product, products as staticProducts } from '../data/products';
 import { db } from '../lib/firebase';
 import { collection, addDoc, onSnapshot, query, serverTimestamp } from 'firebase/firestore';
 
@@ -32,20 +32,32 @@ export function ShopProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Load Products from Firestore
+  // Load Products from Firestore or Fallback
   useEffect(() => {
-    const q = query(collection(db, 'products'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const items = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Product[];
-      if (items.length > 0) {
-        setProducts(items);
-      }
-    });
+    if (!db) {
+      console.warn("Firestore not initialized. Falling back to local hardware manifest.");
+      setProducts(staticProducts);
+      return;
+    }
 
-    return () => unsubscribe();
+    try {
+      const q = query(collection(db, 'products'));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const items = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Product[];
+        if (items.length > 0) {
+          setProducts(items);
+        }
+      }, (error) => {
+        console.error("Firestore stream error:", error);
+      });
+
+      return () => unsubscribe();
+    } catch (error) {
+      console.error("Failed to establish neural link with Firestore:", error);
+    }
   }, []);
 
   // Load from local storage
