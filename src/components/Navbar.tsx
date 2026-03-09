@@ -55,8 +55,8 @@ export default function Navbar() {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? 'glass py-3 border-b border-white/5 shadow-2xl' : 'bg-transparent py-6'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
+        isScrolled ? 'backdrop-blur-3xl bg-black/40 py-4 border-b border-white/5' : 'bg-transparent py-8'
       }`}
       onMouseLeave={() => setActiveMegaMenu(null)}
     >
