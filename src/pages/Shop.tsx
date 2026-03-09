@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Filter, ChevronDown, Check } from 'lucide-react';
-import { products, categories } from '../data/products';
+import { useShop } from '../context/ShopContext';
+import { categories } from '../data/products';
 import ProductCard from '../components/ProductCard';
 
 export default function Shop() {
+  const { products } = useShop();
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category') || 'All';
   const dealsParam = searchParams.get('deals') === 'true';

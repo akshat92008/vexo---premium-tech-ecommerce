@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Product } from '../data/products';
+import { db } from '../lib/firebase';
+import { collection, addDoc, onSnapshot, query, serverTimestamp } from 'firebase/firestore';
 
 interface CartItem extends Product {
   quantity: number;
@@ -8,11 +10,14 @@ interface CartItem extends Product {
 interface ShopContextType {
   cart: CartItem[];
   wishlist: Product[];
+  products: Product[];
   addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   toggleWishlist: (product: Product) => void;
   isInWishlist: (productId: string) => boolean;
+  clearCart: () => void;
+  placeOrder: (orderData: any) => Promise<string>;
   cartTotal: number;
   cartCount: number;
   isCartOpen: boolean;
@@ -24,7 +29,24 @@ const ShopContext = createContext<ShopContextType | undefined>(undefined);
 export function ShopProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Load Products from Firestore
+  useEffect(() => {
+    const q = query(collection(db, 'products'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const items = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Product[];
+      if (items.length > 0) {
+        setProducts(items);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Load from local storage
   useEffect(() => {
@@ -81,6 +103,27 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     return wishlist.some(item => item.id === productId);
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const placeOrder = async (orderData: any) => {
+    try {
+      const docRef = await addDoc(collection(db, 'orders'), {
+        ...orderData,
+        items: cart,
+        total: cartTotal,
+        createdAt: serverTimestamp(),
+        status: 'pending'
+      });
+      clearCart();
+      return docRef.id;
+    } catch (error) {
+      console.error("Error placing order:", error);
+      throw error;
+    }
+  };
+
   const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
@@ -88,11 +131,14 @@ export function ShopProvider({ children }: { children: ReactNode }) {
     <ShopContext.Provider value={{
       cart,
       wishlist,
+      products,
       addToCart,
       removeFromCart,
       updateQuantity,
       toggleWishlist,
       isInWishlist,
+      clearCart,
+      placeOrder,
       cartTotal,
       cartCount,
       isCartOpen,

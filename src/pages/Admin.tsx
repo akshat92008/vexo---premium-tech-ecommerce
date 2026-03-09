@@ -1,8 +1,37 @@
-import { BarChart3, Users, ShoppingBag, DollarSign, Package, Settings, Bell } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { BarChart3, Users, ShoppingBag, DollarSign, Package, Bell } from 'lucide-react';
+import { db } from '../lib/firebase';
+import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { useShop } from '../context/ShopContext';
 
 export default function Admin() {
+  const { products } = useShop();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(10));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const orderList = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setOrders(orderList);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const stats = [
+    { title: 'Gross Revenue', value: `$${orders.reduce((acc, curr) => acc + (curr.total || 0), 0).toLocaleString()}`, icon: <DollarSign size={20} />, trend: '+12.5%', color: 'primary' },
+    { title: 'Active Orders', value: orders.length.toString(), icon: <ShoppingBag size={20} />, trend: '+5.2%', color: 'secondary' },
+    { title: 'Neural Users', value: '12,450', icon: <Users size={20} />, trend: '+18.1%', color: 'accent' },
+    { title: 'Base Units', value: products.length.toString(), icon: <Package size={20} />, trend: '+2.4%', color: 'silver' },
+  ];
+
   return (
-    <div className="bg-background min-h-screen pt-32 pb-24">
+    <div className="bg-background/40 backdrop-blur-md min-h-screen pt-32 pb-24 relative z-10">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
           <div className="space-y-2">
@@ -13,13 +42,13 @@ export default function Admin() {
             <div className="flex -space-x-4">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="w-10 h-10 rounded-full border-2 border-background bg-white/5 overflow-hidden">
-                  <img src={`https://i.pravatar.cc/150?u=${i}`} alt="Admin" />
+                  <img src={`https://i.pravatar.cc/150?u=${i + 10}`} alt="Admin" />
                 </div>
               ))}
             </div>
             <button className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all relative group">
               <Bell size={20} className="text-gray-400 group-hover:text-primary transition-colors" />
-              <span className="absolute top-4 right-4 w-1.5 h-1.5 bg-primary rounded-full neon-glow" />
+              {orders.length > 0 && <span className="absolute top-4 right-4 w-1.5 h-1.5 bg-primary rounded-full neon-glow" />}
             </button>
             <div className="h-10 w-px bg-white/10" />
             <div className="flex items-center gap-4">
@@ -37,12 +66,7 @@ export default function Admin() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {[
-            { title: 'Gross Revenue', value: '$124,563', icon: <DollarSign size={20} />, trend: '+12.5%', color: 'primary' },
-            { title: 'Active Orders', value: '842', icon: <ShoppingBag size={20} />, trend: '+5.2%', color: 'secondary' },
-            { title: 'Neural Users', value: '12,450', icon: <Users size={20} />, trend: '+18.1%', color: 'accent' },
-            { title: 'Unit Sales', value: '3,240', icon: <Package size={20} />, trend: '+2.4%', color: 'silver' },
-          ].map((stat, i) => (
+          {stats.map((stat, i) => (
             <div key={i} className="glass-card p-8 rounded-[2.5rem] border-white/5 hover:border-white/10 transition-all group">
               <div className="flex justify-between items-start mb-6">
                 <div className={`w-12 h-12 rounded-[1.2rem] bg-${stat.color}/10 text-${stat.color} flex items-center justify-center border border-${stat.color}/20 group-hover:scale-110 transition-transform`}>
@@ -81,23 +105,28 @@ export default function Admin() {
                   </tr>
                 </thead>
                 <tbody className="text-xs">
-                  {[1, 2, 3, 4, 5, 6].map((row) => (
-                    <tr key={row} className="border-b border-white/5 hover:bg-white/5 transition-all group">
-                      <td className="py-6 font-mono font-black text-white/60 group-hover:text-primary transition-colors">#VX-{1000 + row}</td>
-                      <td className="py-6 italic font-medium">Citizen_{829 + row}</td>
-                      <td className="py-6 text-gray-500 font-bold">T-MINUS {row}H</td>
-                      <td className="py-6 font-display font-black text-white">${(249 + row * 10).toFixed(0)}.99</td>
+                  {orders.map((order) => (
+                    <tr key={order.id} className="border-b border-white/5 hover:bg-white/5 transition-all group">
+                      <td className="py-6 font-mono font-black text-white/60 group-hover:text-primary transition-colors">#{order.id.substring(0, 8).toUpperCase()}</td>
+                      <td className="py-6 italic font-medium">{order.customer?.firstName || 'Citizen'}_{order.id.substring(order.id.length - 3)}</td>
+                      <td className="py-6 text-gray-500 font-bold uppercase">{order.createdAt?.toDate ? new Date(order.createdAt.toDate()).toLocaleTimeString() : 'Recent'}</td>
+                      <td className="py-6 font-display font-black text-white">${(order.total || 0).toFixed(2)}</td>
                       <td className="py-6">
                         <span className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest ${
-                          row % 3 === 0 ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
-                          row % 2 === 0 ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
+                          order.status === 'pending' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
+                          order.status === 'processing' ? 'bg-blue-500/10 text-blue-500 border border-blue-500/20' :
                           'bg-primary/10 text-primary border border-primary/20'
                         }`}>
-                          {row % 3 === 0 ? 'Pending' : row % 2 === 0 ? 'Transit' : 'Secured'}
+                          {order.status || 'Secured'}
                         </span>
                       </td>
                     </tr>
                   ))}
+                  {orders.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="py-12 text-center text-gray-500 font-bold italic uppercase tracking-widest">No Transmissions Detected</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -106,19 +135,14 @@ export default function Admin() {
           <div className="lg:col-span-4 glass-card p-10 rounded-[3rem] border-white/5">
             <h2 className="text-2xl font-display font-black tracking-tight mb-12">ELITE HARDWARE</h2>
             <div className="space-y-8">
-              {[
-                { name: 'Aura Sonic Pro', sales: '1,204', price: '399', img: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=200' },
-                { name: 'Neural Link X1', sales: '842', price: '299', img: 'https://images.unsplash.com/photo-1546435770-a3e426ff472b?auto=format&fit=crop&q=80&w=200' },
-                { name: 'Quantum Buds', sales: '613', price: '199', img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=200' },
-                { name: 'Carbon Shell', sales: '430', price: '599', img: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&q=80&w=200' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-6 group cursor-pointer">
+              {products.slice(0, 4).map((item, i) => (
+                <div key={item.id} className="flex items-center gap-6 group cursor-pointer">
                   <div className="w-16 h-16 rounded-[1.2rem] bg-background border border-white/5 overflow-hidden flex-shrink-0 group-hover:border-primary/50 transition-all">
-                    <img src={item.img} alt={item.name} className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700" />
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-black text-white text-xs group-hover:text-primary transition-colors">{item.name.toUpperCase()}</h4>
-                    <p className="text-gray-500 text-[9px] font-bold uppercase tracking-widest mt-1">{item.sales} UNITS SHIPPED</p>
+                    <p className="text-gray-500 text-[9px] font-bold uppercase tracking-widest mt-1">OPTIMIZED UNIT</p>
                   </div>
                   <div className="text-right">
                     <p className="font-display font-black text-white text-sm">${item.price}</p>

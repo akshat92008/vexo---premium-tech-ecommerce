@@ -5,18 +5,35 @@ import { useShop } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
 
 export default function Checkout() {
-  const { cart, cartTotal } = useShop();
+  const { cart, cartTotal, placeOrder } = useShop();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    address: '',
+    city: '',
+    zip: ''
+  });
 
-  const handleCheckout = (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
+    
+    try {
+      const id = await placeOrder({
+        customer: formData,
+        paymentMethod: 'mock_stripe'
+      });
+      setOrderId(id);
       setIsSuccess(true);
-    }, 2000);
+    } catch (error) {
+      alert("Encryption failed. Check neural link.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   if (isSuccess) {
@@ -44,7 +61,7 @@ export default function Checkout() {
           >
             <h1 className="text-6xl md:text-7xl font-display font-bold tracking-tighter">MANIFEST SECURED</h1>
             <p className="text-xl text-text-muted mb-12 max-w-lg mx-auto font-medium italic opacity-80">
-              “Your order #VEXO-{Math.floor(Math.random() * 1000000)} has been integrated into our neural shipping grid. Prepare for arrival.”
+              “Your order #{orderId || 'VEXO-GRID'} has been integrated into our neural shipping grid. Prepare for arrival.”
             </p>
             <div className="pt-8 flex flex-col sm:flex-row gap-6 justify-center">
               <Link 
@@ -118,15 +135,15 @@ export default function Checkout() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Subject First Name</label>
-                    <input required type="text" placeholder="ELARA" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
+                    <input required type="text" placeholder="ELARA" value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
                   </div>
                   <div className="space-y-3">
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Subject Last Name</label>
-                    <input required type="text" placeholder="VOX" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
+                    <input required type="text" placeholder="VOX" value={formData.lastName} onChange={(e) => setFormData({...formData, lastName: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
                   </div>
                   <div className="space-y-3 md:col-span-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Neural Email Address</label>
-                    <input required type="email" placeholder="elara.vox@neural.link" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
+                    <input required type="email" placeholder="elara.vox@neural.link" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
                   </div>
                 </div>
               </section>
@@ -143,15 +160,15 @@ export default function Checkout() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3 md:col-span-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Destination Coordinate (Street)</label>
-                    <input required type="text" placeholder="72 ALPHA SECTOR, NEURAL CITY" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
+                    <input required type="text" placeholder="72 ALPHA SECTOR, NEURAL CITY" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
                   </div>
                   <div className="space-y-3">
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Megacity</label>
-                    <input required type="text" placeholder="TOKYO_NEO" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
+                    <input required type="text" placeholder="TOKYO_NEO" value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
                   </div>
                   <div className="space-y-3">
                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Sector Code (ZIP)</label>
-                    <input required type="text" placeholder="100-8901" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
+                    <input required type="text" placeholder="100-8901" value={formData.zip} onChange={(e) => setFormData({...formData, zip: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
                   </div>
                 </div>
               </section>

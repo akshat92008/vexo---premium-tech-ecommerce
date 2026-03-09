@@ -1,10 +1,12 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play, Star, Shield, Zap, Headphones, ChevronRight, Share2, Award } from 'lucide-react';
-import { products, categories } from '../data/products';
+import { useShop } from '../context/ShopContext';
+import { categories } from '../data/products';
 import ProductCard from '../components/ProductCard';
 
 export default function Home() {
+  const { products } = useShop();
   const featuredProducts = products.filter(p => p.isFeatured).slice(0, 4);
 
   const containerVariants = {
