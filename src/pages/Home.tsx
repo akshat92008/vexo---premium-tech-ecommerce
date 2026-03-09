@@ -4,6 +4,8 @@ import { ArrowRight, Play, Star, Shield, Zap, Headphones, ChevronRight, Share2, 
 import { useShop } from '../context/ShopContext';
 import { categories } from '../data/products';
 import ProductCard from '../components/ProductCard';
+import AuraVisualizer from '../components/AuraVisualizer';
+import FoundrySection from '../components/FoundrySection';
 
 export default function Home() {
   const { products } = useShop();
@@ -150,6 +152,39 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Aura Tech Demo Section */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
+            <div className="lg:col-span-5 space-y-10">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-px bg-primary" />
+                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">Acoustic Engineering</span>
+              </div>
+              <h2 className="text-5xl md:text-7xl font-display font-black tracking-tighter leading-[0.9]">
+                NEURAL <br /><span className="text-white/10 uppercase italic">RESONANCE.</span>
+              </h2>
+              <p className="text-xl text-text-muted font-medium leading-relaxed italic">
+                “Behold the signal journey. Every decibel is sculpted by our proprietary neural lattice, ensuring 0.0001% harmonic distortion.”
+              </p>
+              <div className="grid grid-cols-2 gap-8 pt-8 border-t border-white/5">
+                <div>
+                  <div className="text-2xl font-display font-black text-white italic">24-BIT</div>
+                  <div className="text-[9px] uppercase tracking-widest text-silver/40">Signal Processing</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-display font-black text-white italic">ZERO</div>
+                  <div className="text-[9px] uppercase tracking-widest text-silver/40">Phase Jitter</div>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-7">
+              <AuraVisualizer />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Collection */}
       <section className="py-40 bg-surface relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 blur-[200px] rounded-full -translate-y-1/2 translate-x-1/2" />
@@ -242,6 +277,9 @@ export default function Home() {
            </div>
         </div>
       </section>
+
+      {/* Foundry Assembly Experience */}
+      <FoundrySection />
 
       {/* CTA / Newsletter */}
       <section className="py-60 relative overflow-hidden">

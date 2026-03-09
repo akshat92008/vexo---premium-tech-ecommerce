@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
+import SupplyChainFeed from './SupplyChainFeed';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 
@@ -28,6 +29,7 @@ export default function Layout() {
       <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
         <CartDrawer />
+        <SupplyChainFeed />
         <AnimatePresence mode="wait">
           <motion.main
             key={location.pathname}

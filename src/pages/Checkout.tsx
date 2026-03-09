@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { CreditCard, Truck, ShieldCheck, Lock, CheckCircle } from 'lucide-react';
+import { CreditCard, Truck, ShieldCheck, Lock, CheckCircle, Cpu } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
 
@@ -123,6 +123,43 @@ export default function Checkout() {
           {/* Form */}
           <div className="lg:col-span-8 space-y-16">
             <form onSubmit={handleCheckout} className="space-y-12">
+              {/* Procurement Status */}
+              <section className="glass-card p-10 rounded-[3rem] border-primary/20 bg-primary/[0.02] relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl" />
+                <div className="flex items-center justify-between mb-8">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-display font-black tracking-tight uppercase italic flex items-center gap-3">
+                      <ShieldCheck className="text-primary animate-pulse" /> Priority Procurement
+                    </h3>
+                    <p className="text-[10px] text-text-muted uppercase tracking-[0.2em] font-bold">Protocol: Neural-Allocation-v4</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary block mb-1">Queue Status</span>
+                    <span className="text-xs font-mono text-white bg-white/5 px-3 py-1 rounded-lg border border-white/5">0.00ms Latency</span>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                     <div className="flex-grow h-px bg-white/5" />
+                     <span className="text-[8px] font-black uppercase tracking-[0.4em] text-white/20">Generated Neural Hash</span>
+                     <div className="flex-grow h-px bg-white/5" />
+                  </div>
+                  
+                  <div className="bg-black/40 p-6 rounded-2xl border border-white/5 flex items-center justify-between group/hash">
+                     <div className="flex flex-col">
+                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">Unit Assignment</span>
+                        <code className="text-[11px] font-mono text-primary group-hover/hash:text-white transition-colors">
+                          0xVEXO_{Math.random().toString(16).slice(2, 14).toUpperCase()}
+                        </code>
+                     </div>
+                     <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-primary border border-white/5 animate-spin-slow">
+                        <Cpu size={16} />
+                     </div>
+                  </div>
+                </div>
+              </section>
+
               {/* Contact Info */}
               <section className="glass-card p-10 rounded-[3rem] border-white/5 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-10 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
@@ -130,15 +167,15 @@ export default function Checkout() {
                 </div>
                 <h2 className="text-2xl font-display font-bold mb-10 flex items-center gap-4">
                   <span className="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center text-xs font-black border border-primary/20">01</span>
-                  IDENTIFICATION
+                  ALLOCATION IDENTITY
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Subject First Name</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Operator First Name</label>
                     <input required type="text" placeholder="ELARA" value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Subject Last Name</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">Operator Last Name</label>
                     <input required type="text" placeholder="VOX" value={formData.lastName} onChange={(e) => setFormData({...formData, lastName: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-primary/50 transition-all font-bold" />
                   </div>
                   <div className="space-y-3 md:col-span-2">
@@ -239,7 +276,7 @@ export default function Checkout() {
                   </>
                 ) : (
                   <>
-                    <Lock size={18} /> AUTHORIZE PROCUREMENT: ${cartTotal.toFixed(0)}.99
+                    <Lock size={18} /> AUTHORIZE TRANSMISSION: ${cartTotal.toFixed(0)}.99
                   </>
                 )}
               </button>
