@@ -2,7 +2,6 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
-import NeuralCursor from './NeuralCursor';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 
@@ -11,7 +10,6 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-white relative overflow-hidden">
-      <NeuralCursor />
       {/* Cinematic Background Video - Site wide */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-20 overflow-hidden">
         <video 
