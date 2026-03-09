@@ -33,16 +33,16 @@ export default function Home() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* Background Video & Overlays */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/40 to-background z-10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/20 z-10" />
-          <div className="absolute inset-0 bg-noise opacity-30 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/30 to-background z-10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/10 z-10" />
+          <div className="absolute inset-0 bg-noise opacity-20 z-10" />
           <video 
             autoPlay 
             muted 
             loop 
             playsInline
             className="w-full h-full object-cover scale-105"
-            style={{ filter: 'brightness(0.6) contrast(1.1)' }}
+            style={{ filter: 'brightness(0.8) contrast(1.1)' }}
           >
             <source src="/Futuristic_Luxury_Headphone_Video_Generation.mp4" type="video/mp4" />
           </video>

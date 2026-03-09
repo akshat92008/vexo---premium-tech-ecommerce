@@ -19,11 +19,11 @@ export default function Layout() {
           loop 
           playsInline 
           className="w-full h-full object-cover scale-110"
-          style={{ filter: 'grayscale(1) brightness(0.5)' }}
+          style={{ filter: 'grayscale(0.5) brightness(0.7)' }}
         >
           <source src="/Futuristic_Luxury_Headphone_Video_Generation.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-background/60 backdrop-blur-[100px]" />
+        <div className="absolute inset-0 bg-background/40 backdrop-blur-[80px]" />
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen">
