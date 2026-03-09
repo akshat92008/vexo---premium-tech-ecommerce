@@ -1,12 +1,11 @@
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Heart, Star, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Heart, Star, ArrowRight, Activity, Cpu } from 'lucide-react';
 import { Product } from '../data/products';
 import { useShop } from '../context/ShopContext';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface ProductCardProps {
   product: Product;
-  key?: string | number;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -15,24 +14,28 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ y: -10 }}
-      className="group relative glass-card rounded-[2rem] overflow-hidden border-white/5 hover:border-primary/30 transition-all duration-500"
+      className="group relative glass-card rounded-[2.5rem] overflow-hidden border-white/5 hover:border-primary/40 transition-all duration-1000"
     >
+      {/* Scanline Effect */}
+      <div className="absolute inset-0 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary to-transparent animate-scan" />
+        <div className="absolute inset-0 bg-primary/[0.02] mix-blend-overlay" />
+      </div>
+
       {/* Badges */}
-      <div className="absolute top-6 left-6 z-20 flex flex-col gap-2">
-        {product.isNew && (
-          <span className="bg-primary text-black text-[9px] font-black px-3 py-1.5 rounded-lg uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(0,240,255,0.4)]">
-            New
-          </span>
+      <div className="absolute top-8 left-8 z-20 flex flex-col gap-3">
+        {product.isFeatured && (
+          <div className="flex items-center gap-2 bg-black/60 backdrop-blur-3xl px-4 py-2 rounded-xl border border-primary/30 shadow-glow-cyan/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="text-[9px] font-black text-white uppercase tracking-[0.3em]">Vault Selected</span>
+          </div>
         )}
-        {product.originalPrice && (
-          <span className="bg-secondary text-white text-[9px] font-black px-3 py-1.5 rounded-lg uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(112,0,255,0.4)]">
-            Elite
-          </span>
-        )}
+        <div className="flex items-center gap-2 bg-white/5 backdrop-blur-3xl px-3 py-1.5 rounded-lg border border-white/5">
+          <span className="text-[8px] font-black text-white/40 uppercase tracking-widest">Neural Link v4.2</span>
+        </div>
       </div>
 
       {/* Wishlist Button */}
@@ -41,75 +44,85 @@ export default function ProductCard({ product }: ProductCardProps) {
           e.preventDefault();
           toggleWishlist(product);
         }}
-        className="absolute top-6 right-6 z-20 p-2.5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/10 hover:border-primary/50 transition-all group/wish"
+        className="absolute top-8 right-8 z-20 p-3 rounded-2xl bg-black/40 backdrop-blur-3xl border border-white/5 hover:border-primary/50 transition-all duration-500 group/wish"
       >
         <Heart 
-          size={16} 
-          className={`transition-all duration-500 ${isWishlisted ? 'fill-primary text-primary scale-110' : 'text-white group-hover/wish:text-primary'}`} 
+          size={18} 
+          className={`transition-all duration-700 ${isWishlisted ? 'fill-primary text-primary scale-110' : 'text-white/60 group-hover/wish:text-primary group-hover/wish:scale-110'}`} 
         />
       </button>
 
       {/* Image Container */}
-      <Link to={`/product/${product.id}`} className="block relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-surface-light to-background">
-        <img 
+      <Link to={`/product/${product.id}`} className="block relative aspect-[4/5] overflow-hidden bg-background">
+        <motion.img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 group-hover:rotate-1 filter grayscale-[20%] group-hover:grayscale-0 contrast-110"
+          className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0 brightness-75 group-hover:brightness-100"
           loading="lazy"
         />
         
-        {/* Decorative Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
+        {/* Decorative Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-grain opacity-5" />
 
         {/* Quick Add Overlay */}
-        <div className="absolute inset-x-6 bottom-6 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+        <div className="absolute inset-x-8 bottom-8 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 ease-[0.22, 1, 0.36, 1]">
           <button 
             onClick={(e) => {
               e.preventDefault();
               addToCart(product);
             }}
-            className="w-full bg-white text-black py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-[0_20px_40px_rgba(0,0,0,0.4)] hover:bg-primary hover:text-black transition-all active:scale-95"
+            className="w-full bg-white text-black py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] flex items-center justify-center gap-4 shadow-premium hover:bg-primary transition-all active:scale-95"
           >
-            <ShoppingBag size={18} /> Quick Add
+            <ShoppingBag size={16} /> Procure Unit
           </button>
         </div>
       </Link>
 
       {/* Content */}
-      <div className="p-8 space-y-4">
-        <div className="flex justify-between items-center">
-          <span className="text-[10px] uppercase tracking-[0.2em] font-black text-primary/60">
-            {product.category}
-          </span>
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/5 border border-white/5">
-            <Star size={10} className="fill-primary text-primary" />
-            <span className="text-[10px] font-bold text-gray-300">{product.rating}</span>
+      <div className="p-10 space-y-8 relative z-20 bg-background/40 backdrop-blur-sm">
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-[9px] uppercase tracking-[0.4em] font-black text-primary italic">
+              Hardware Series: 01
+            </span>
+            <div className="flex items-center gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
+               <Cpu size={12} className="text-primary" />
+               <span className="text-[8px] font-black text-white uppercase tracking-widest">Titanium Core</span>
+            </div>
           </div>
-        </div>
-        
-        <div>
+          
           <Link to={`/product/${product.id}`}>
-            <h3 className="text-xl font-display font-bold text-white mb-1 line-clamp-1 group-hover:text-primary transition-colors duration-300">
+            <h3 className="text-3xl font-display font-black text-white tracking-tighter line-clamp-1 group-hover:text-primary transition-colors duration-500 uppercase italic">
               {product.name}
             </h3>
           </Link>
-          <p className="text-xs text-text-muted line-clamp-1 font-medium italic opacity-60">High-fidelity acoustic architecture</p>
+        </div>
+
+        {/* Tech Specs (Luxury Metadata) */}
+        <div className="grid grid-cols-2 gap-4 pb-4 border-b border-white/5 opacity-40 group-hover:opacity-80 transition-opacity">
+           <div className="flex items-center gap-3">
+              <Activity size={12} className="text-primary" />
+              <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">2Hz - 48kHz</span>
+           </div>
+           <div className="flex items-center gap-3">
+              <Star size={12} className="text-primary" />
+              <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">99.9% Purity</span>
+           </div>
         </div>
         
         <div className="flex items-center justify-between pt-2">
-          <div className="flex items-baseline gap-3">
-            <span className="text-2xl font-display font-black text-white">
-              ${product.price.toFixed(0)}<span className="text-sm font-bold opacity-40">.99</span>
-            </span>
-            {product.originalPrice && (
-              <span className="text-sm text-text-muted line-through decoration-primary/40 font-bold opacity-50">
-                ${product.originalPrice.toFixed(0)}
+          <div className="flex flex-col gap-1">
+            <span className="text-sm font-black text-primary/40 uppercase tracking-[0.4em] leading-none">Price Manifest</span>
+            <div className="flex items-baseline gap-3">
+              <span className="text-3xl font-display font-black text-white italic">
+                ${product.price.toFixed(0)}<span className="text-sm font-bold opacity-30">.99</span>
               </span>
-            )}
+            </div>
           </div>
           
-          <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-primary group-hover:bg-primary/5 transition-all outline outline-0 group-hover:outline-4 outline-primary/10">
-            <ArrowRight size={14} className="text-gray-500 group-hover:text-primary transition-colors" />
+          <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-black transition-all duration-500 shadow-glow-cyan/0 group-hover:shadow-glow-cyan/20">
+            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
       </div>

@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-plus: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
 
-  --color-background: #020203;
+  --color-background: #050505;
   --color-surface: #0a0a0c;
   --color-surface-light: #121216;
   --color-surface-lighter: #1a1a20;
@@ -13,99 +12,117 @@
   --color-primary-dark: #00b3cc;
   --color-secondary: #7000ff;
   --color-accent: #ff007a;
-  --color-silver: #a1a1aa;
+  --color-silver: #a0a0a5;
   --color-text-main: #ffffff;
-  --color-text-muted: #94a3b8;
+  --color-text-muted: #808085;
   
-  --shadow-neon: 0 0 20px rgba(0, 240, 255, 0.1), 0 0 40px rgba(0, 240, 255, 0.05);
-  --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --shadow-neon: 0 0 30px rgba(0, 240, 255, 0.15), 0 0 60px rgba(0, 240, 255, 0.05);
+  --shadow-premium: 0 40px 100px -20px rgba(0, 0, 0, 0.9);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 }
 
 @layer base {
   body {
-    @apply bg-background text-text-main font-plus antialiased selection:bg-primary/30 selection:text-primary;
+    @apply bg-background text-text-main font-body antialiased selection:bg-primary/30 selection:text-primary;
     background-image: 
-      radial-gradient(circle at 50% -20%, rgba(0, 240, 255, 0.08), transparent 70%),
+      radial-gradient(circle at 50% -20%, rgba(0, 240, 255, 0.1), transparent 70%),
       radial-gradient(circle at 0% 100%, rgba(112, 0, 255, 0.05), transparent 40%);
     background-attachment: fixed;
     letter-spacing: -0.01em;
+    cursor: none; /* Hide default cursor for custom one */
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight;
+    @apply font-display tracking-tight leading-tight;
   }
 }
 
 @layer utilities {
   .glass {
-    @apply bg-surface/60 backdrop-blur-2xl border border-white/5;
+    @apply bg-surface/40 backdrop-blur-3xl border border-white/5;
   }
   
   .glass-card {
-    @apply bg-surface/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-premium transition-all duration-500 overflow-hidden;
+    @apply bg-surface/30 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-premium transition-all duration-700 overflow-hidden;
   }
 
   .neon-glow {
     box-shadow: var(--shadow-neon);
   }
 
-  .neon-border {
-    @apply border-primary/20 hover:border-primary/50 transition-colors duration-300;
-  }
-
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-white/60;
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-white/40;
   }
   
   .text-gradient-primary {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-cyan-400 to-blue-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-cyan-300 to-blue-400;
   }
 
-  .text-gradient-secondary {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary via-purple-400 to-pink-500;
-  }
-
-  .bg-noise {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3ExternalGradientDefs/%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.03;
+  .bg-grain {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3ExternalGradientDefs/%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.05;
     pointer-events: none;
   }
 
-  .hover-lift {
-    @apply transition-transform duration-500 hover:-translate-y-2;
+  .hover-magnetic {
+     @apply transition-transform duration-300 ease-out;
   }
 
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
+  .shadow-glow-cyan {
+    box-shadow: 0 0 40px -10px rgba(0, 240, 255, 0.4);
   }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+  @keyframes scan {
+    0% { transform: translateY(-100%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(1000%); opacity: 0; }
   }
 
-  .mask-radial {
-    mask-image: radial-gradient(circle at center, black, transparent 80%);
+  .animate-scan {
+    animation: scan 4s linear infinite;
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 240, 255, 0.3);
+/* Custom Neural Cursor */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s ease-out;
 }
 
-/* Form Styles */
-input, select, textarea {
-  @apply bg-surface-light border border-white/5 rounded-xl px-4 py-3 outline-none focus:border-primary/30 transition-all;
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid rgba(0, 240, 255, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease, border-color 0.3s ease;
+}
+
+/* Luxury Transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Force Hide Cursor on mobile */
+@media (max-width: 1024px) {
+  body { cursor: auto; }
+  .cursor-dot, .cursor-ring { display: none; }
 }

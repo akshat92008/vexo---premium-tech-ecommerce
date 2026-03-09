@@ -55,24 +55,41 @@ export default function Navbar() {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? 'glass py-3 border-b border-white/5 shadow-2xl' : 'bg-transparent py-6'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
+        isScrolled ? 'bg-background/80 backdrop-blur-3xl py-4 border-b border-white/5 shadow-premium' : 'bg-transparent py-8'
       }`}
       onMouseLeave={() => setActiveMegaMenu(null)}
     >
+      {/* Neural Status Top Bar */}
+      {!isScrolled && (
+        <div className="absolute top-0 left-0 right-0 py-2 bg-primary/10 border-b border-primary/10 flex justify-center">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="text-[8px] font-black uppercase tracking-[0.4em] text-primary">Neural Link: Active</span>
+            </div>
+            <div className="w-px h-3 bg-white/10" />
+            <span className="text-[8px] font-black uppercase tracking-[0.4em] text-white/40">Global Allocation: 82% Secured</span>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="group flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center p-2 transition-transform group-hover:scale-110 group-hover:rotate-3 shadow-[0_0_20px_rgba(0,240,255,0.4)]">
-            <ShoppingBag className="text-black w-full h-full" />
+        <Link to="/" className="group flex items-center gap-3">
+          <div className="relative">
+            <div className="w-10 h-10 rounded-2xl bg-white text-black flex items-center justify-center transition-all duration-700 group-hover:bg-primary group-hover:rotate-[360deg] shadow-[0_0_30px_rgba(255,255,255,0.2)] group-hover:shadow-glow-cyan">
+              <ShoppingBag size={20} className="transition-transform group-hover:scale-90" />
+            </div>
+            <div className="absolute -inset-2 bg-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <span className="text-2xl font-display font-bold tracking-tighter text-white">
+          <span className="text-3xl font-display font-black tracking-tighter text-white uppercase italic">
             VEXO<span className="text-primary group-hover:animate-pulse">.</span>
           </span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center space-x-12">
+        <nav className="hidden lg:flex items-center space-x-16">
           {menuItems.map((item) => (
             <div 
               key={item.name}
@@ -81,11 +98,11 @@ export default function Navbar() {
             >
               <Link 
                 to={item.path}
-                className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-colors group"
+                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.4em] text-silver/60 hover:text-white transition-all group py-2"
               >
                 {item.name}
-                {item.categories && <ChevronDown size={12} className={`transition-transform duration-300 ${activeMegaMenu === item.name ? 'rotate-180' : ''}`} />}
-                <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${activeMegaMenu === item.name ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+                {item.categories && <ChevronDown size={10} className={`transition-transform duration-500 opacity-40 ${activeMegaMenu === item.name ? 'rotate-180 opacity-100' : ''}`} />}
+                <span className={`absolute bottom-0 left-0 h-[1.5px] bg-primary transition-all duration-700 ease-[0.22, 1, 0.36, 1] ${activeMegaMenu === item.name ? 'w-full' : 'w-0'}`} />
               </Link>
             </div>
           ))}
